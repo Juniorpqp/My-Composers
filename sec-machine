@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  kali:
+    image: juniorpqp/sec-kali
+    container_name: kali
+    restart: always
+    tty: true
+    stdin_open: true
+    
+    ## You can add a mapped folder with your configuration. In this example, you can define the database config for the metasploit.
+    #volumes:
+      #- ./data/database.yml:/usr/share/metasploit-framework/config/database.yml
+
+    depends_on:
+      - kalidb
+    mem_limit: 4GB
+    ports:
+      - "4444:4444"  # Metasploit RPC port
+    networks:
+      - metanet
+
+  kalidb:
+    image: juniorpqp/sec-database
+    restart: always
+    container_name: kalidb
+
+    ## You can add a mapped folder with your configuration. In this example, you can define the database folder to save files locally.
+    #volumes:
+      #- ./data/db:/var/lib/postgresql/data
+    mem_limit: 4GB
+    networks:
+      - metanet
+
+networks:
+  metanet:
+    driver: bridge
